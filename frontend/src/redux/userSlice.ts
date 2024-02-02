@@ -1,31 +1,53 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import customAxios from '../utils/axios';
+
+type User = {
+    id: number;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+};
 
 const initialState = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  username: '',
+  user: {} as User,
+  loading: false,
+  error: '',
 };
+
+export const loginUser = createAsyncThunk('user/loginUser', async (formData: { username: string; password: string }) => {
+  const response = await customAxios.post('/accounts/login/', formData);
+  return response.data.user; 
+});
+
+
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setFirstName: (state, action: PayloadAction<string>) => {
-      state.firstName = action.payload;
+    setUser: (state, { payload }) => {
+        state.user = payload;
     },
-    setLastName: (state, action: PayloadAction<string>) => {
-      state.lastName = action.payload;
-    },
-    setEmail: (state, action: PayloadAction<string>) => {
-      state.email = action.payload;
-    },
-    setUserName: (state, action: PayloadAction<string>) => {
-        state.username = action.payload;
-    },
+    resetUser: (state) => {
+        state.user = initialState.user;
+    }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = '';
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload; 
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Login failed'; 
+      });
   },
 });
-
-export const { setFirstName, setLastName, setEmail } = userSlice.actions;
 
 export default userSlice.reducer;

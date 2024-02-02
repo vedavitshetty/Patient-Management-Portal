@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import customAxios from '../utils/axios';
+import { snakeKeysToCamel } from '../utils/textHelpers';
 
 type PatientState = {
   patients: Patient[];
@@ -27,7 +29,6 @@ const initialState: PatientState = {
   error: null,
 }
 
-// Define a type for the patient data
 type Patient = {
   id: number;
   firstName: string;
@@ -38,18 +39,12 @@ type Patient = {
   customerFields?: PatientCustomFields[];
 }
 
-// Define an async thunk to fetch patient data from the backend
 export const fetchPatients = createAsyncThunk('patients/fetchPatients', async () => {
-    try {
-        // Make a GET request to your backend API endpoint to fetch patient data
-        const response = await axios.get('/api/patients');
-        return response.data; // Assuming the response contains an array of patient objects
-    } catch (error) {
-        throw error; // Handle errors appropriately
-    }
+  const response = await customAxios.get('patients/list-all-patients/');
+  const data = response.data.map((patient: any) => snakeKeysToCamel(patient));
+  return data; 
 });
 
-// Create a patient slice using createSlice
 const patientSlice = createSlice({
   name: 'patients',
   initialState,
@@ -63,14 +58,14 @@ const patientSlice = createSlice({
       })
       .addCase(fetchPatients.fulfilled, (state, action) => {
         state.loading = false;
-        state.patients = action.payload; // Update the patients array with fetched data
+        state.patients = action.payload; 
       })
       .addCase(fetchPatients.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch patients'; // Handle the error
+        state.error = action.error.message || 'Failed to fetch patients'; 
       });
   },
 });
 
-// Export the patient reducer
+
 export default patientSlice.reducer;
