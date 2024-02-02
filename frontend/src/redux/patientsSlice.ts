@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 import customAxios from '../utils/axios';
 import { snakeKeysToCamel } from '../utils/textHelpers';
 

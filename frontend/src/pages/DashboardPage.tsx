@@ -2,11 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useAppThunkDispatch, useAppSelector } from '../redux/store';
 import { fetchPatients } from '../redux/patientsSlice';
 import { formatDateOfBirth } from '../utils/textHelpers';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardPage: React.FC = () => {
   const dispatch = useAppThunkDispatch();
 
   const memoizedDispatch = useCallback(dispatch, [dispatch]);
+
+  const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -47,9 +50,11 @@ const DashboardPage: React.FC = () => {
         </thead>
         <tbody>
           {filteredPatients.map((patient) => (
-            <tr key={patient.id}>
+            <tr key={patient.id} onClick={()=> navigate(`/patient/${patient.id}`)} className="cursor-pointer">
               <td className="border px-4 py-2">{patient.id}</td>
-              <td className="border px-4 py-2">{patient.firstName}</td>
+              <td className="border px-4 py-2">
+                {patient.firstName}
+              </td>
               <td className="border px-4 py-2">{patient.lastName}</td>
               <td className="border px-4 py-2">{formatDateOfBirth(patient.dateOfBirth)}</td>
             </tr>
