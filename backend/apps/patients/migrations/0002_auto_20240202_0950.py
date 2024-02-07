@@ -4,66 +4,107 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('patients', '0001_initial'),
+        ("patients", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PatientAddress',
+            name="PatientAddress",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('address_line_1', models.CharField(max_length=100)),
-                ('address_line_2', models.CharField(blank=True, max_length=100, null=True)),
-                ('city', models.CharField(max_length=50)),
-                ('state', models.CharField(max_length=8)),
-                ('zip_code', models.CharField(max_length=16)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True, null=True)),
+                ("updated_at", models.DateTimeField(auto_now=True, null=True)),
+                ("address_line_1", models.CharField(max_length=100)),
+                (
+                    "address_line_2",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("city", models.CharField(max_length=50)),
+                ("state", models.CharField(max_length=8)),
+                ("zip_code", models.CharField(max_length=16)),
             ],
         ),
         migrations.CreateModel(
-            name='PatientCustomData',
+            name="PatientCustomData",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('field_name', models.CharField(max_length=100)),
-                ('field_type', models.CharField(choices=[('TEXT', 'Text'), ('NUMBER', 'Number')], default='TEXT', max_length=50)),
-                ('field_value', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("field_name", models.CharField(max_length=100)),
+                (
+                    "field_type",
+                    models.CharField(
+                        choices=[("TEXT", "Text"), ("NUMBER", "Number")],
+                        default="TEXT",
+                        max_length=50,
+                    ),
+                ),
+                ("field_value", models.TextField()),
             ],
         ),
         migrations.RemoveField(
-            model_name='patient',
-            name='address',
+            model_name="patient",
+            name="address",
         ),
         migrations.AddField(
-            model_name='patient',
-            name='created_at',
+            model_name="patient",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='patient',
-            name='updated_at',
+            model_name="patient",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AlterField(
-            model_name='patient',
-            name='middle_name',
+            model_name="patient",
+            name="middle_name",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AlterField(
-            model_name='patient',
-            name='status',
-            field=models.CharField(choices=[('INQUIRY', 'Inquiry'), ('ONBOARDING', 'Onboarding'), ('ACTIVE', 'Active'), ('CHURNED', 'Churned')], default='INQUIRY', max_length=50),
+            model_name="patient",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("INQUIRY", "Inquiry"),
+                    ("ONBOARDING", "Onboarding"),
+                    ("ACTIVE", "Active"),
+                    ("CHURNED", "Churned"),
+                ],
+                default="INQUIRY",
+                max_length=50,
+            ),
         ),
         migrations.AddField(
-            model_name='patient',
-            name='addresses',
-            field=models.ManyToManyField(related_name='patients', to='patients.PatientAddress'),
+            model_name="patient",
+            name="addresses",
+            field=models.ManyToManyField(
+                related_name="patients", to="patients.PatientAddress"
+            ),
         ),
         migrations.AddField(
-            model_name='patient',
-            name='custom_data',
-            field=models.ManyToManyField(blank=True, null=True, related_name='patients', to='patients.PatientCustomData'),
+            model_name="patient",
+            name="custom_data",
+            field=models.ManyToManyField(
+                blank=True,
+                null=True,
+                related_name="patients",
+                to="patients.PatientCustomData",
+            ),
         ),
     ]

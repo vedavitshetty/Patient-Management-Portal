@@ -1,15 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAppThunkDispatch, useAppSelector } from '../redux/store';
-import { fetchPatients } from '../redux/patientsSlice';
+import { fetchAllPatients } from '../redux/patientsSlice';
 import { formatDateOfBirth } from '../utils/textHelpers';
-import { useNavigate } from 'react-router-dom';
 
 const DashboardPage: React.FC = () => {
   const dispatch = useAppThunkDispatch();
 
   const memoizedDispatch = useCallback(dispatch, [dispatch]);
-
-  const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -24,7 +21,7 @@ const DashboardPage: React.FC = () => {
   );
 
   useEffect(() => {
-    memoizedDispatch(fetchPatients());
+    memoizedDispatch(fetchAllPatients());
   }, [memoizedDispatch]);
 
   return (
@@ -46,17 +43,19 @@ const DashboardPage: React.FC = () => {
             <th className="px-4 py-2">First Name</th>
             <th className="px-4 py-2">Last Name</th>
             <th className="px-4 py-2">Date of Birth</th>
+            <th className="px-4 py-2">Status</th>
           </tr>
         </thead>
         <tbody>
           {filteredPatients.map((patient) => (
-            <tr key={patient.id} onClick={()=> navigate(`/patient/${patient.id}`)} className="cursor-pointer">
+            <tr key={patient.id} onClick={()=> window.open(`/patient/${patient.id}`, '_blank')} className="cursor-pointer">
               <td className="border px-4 py-2">{patient.id}</td>
               <td className="border px-4 py-2">
                 {patient.firstName}
               </td>
               <td className="border px-4 py-2">{patient.lastName}</td>
               <td className="border px-4 py-2">{formatDateOfBirth(patient.dateOfBirth)}</td>
+              <td className="border px-4 py-2">{patient.status}</td>
             </tr>
           ))}
         </tbody>

@@ -1,20 +1,45 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom';
 import LoginPage from './pages/LoginPage'; 
 import DashboardPage from './pages/DashboardPage';
+import PatientDetailsPage from './pages/PatientDetailsPage';
 import { useAppSelector } from './redux/store';
+
+function PrivateRoute() {
+  const isAuthenticated = useAppSelector(state => state.user.user !== null);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  return null;
+}
 
 function App() {
   const isAuthenticated = useAppSelector(state => state.user.user !== null);
+
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path="/dashboard" element={<DashboardPage/>} />
+        <Route
+          path="/login"
+          element={
+            isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage />
+          }
+        />
         <Route
           path="/"
-          element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
-        />
+          element={
+            <>
+              <PrivateRoute />
+              <Outlet />
+            </>
+          }
+        >
+          <Route index element={<DashboardPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/patient/:id" element={<PatientDetailsPage />} />
+        </Route>
       </Routes>
     </Router>
   );

@@ -4,8 +4,15 @@ import { snakeKeysToCamel } from '../utils/textHelpers';
 
 type PatientState = {
   patients: Patient[];
-  loading: boolean;    
-  error: string | null; 
+  currentPatient: Patient;
+  loading: {
+    patients: boolean;
+    currentPatient: boolean;
+  };    
+  error: {
+    patients: string;
+    currentPatient: string;
+  };
 }
 
 type PatientAddress = {
@@ -13,10 +20,10 @@ type PatientAddress = {
     addressLine2?: string;
     city: string;
     state: string;
-    zip: string;
+    zipCode: string;
 }
 
-type PatientCustomFields = {
+type PatientCustomData = {
     fieldName: string;
     fieldType: string;
     fieldValue: string;
@@ -24,8 +31,16 @@ type PatientCustomFields = {
 
 const initialState: PatientState = {
   patients: [],
-  loading: false,
-  error: null,
+  currentPatient: {} as Patient,
+  loading: {
+    patients: false,
+    currentPatient: false,
+  },
+  error: {
+    patients: '',
+    currentPatient: '',
+  
+  },
 }
 
 type Patient = {
@@ -34,14 +49,21 @@ type Patient = {
   middleName?: string;
   lastName: string;
   dateOfBirth: string;
+  status: string;
   addresses: PatientAddress[];
-  customerFields?: PatientCustomFields[];
+  customData?: PatientCustomData[];
 }
 
-export const fetchPatients = createAsyncThunk('patients/fetchPatients', async () => {
-  const response = await customAxios.get('patients/list-all-patients/');
+export const fetchAllPatients = createAsyncThunk('patients/fetchPatients', async () => {
+  const response = await customAxios.get('patients/api/patients/');
   const data = response.data.map((patient: any) => snakeKeysToCamel(patient));
   return data; 
+});
+
+export const fetchCurrentPatient = createAsyncThunk('patients/fetchCurrentPatient', async (patientId: number) => {
+  const response = await customAxios.get(`patients/api/patients/${patientId}/`);
+  const data = snakeKeysToCamel(response.data);
+  return data;
 });
 
 const patientSlice = createSlice({
@@ -51,17 +73,29 @@ const patientSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPatients.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      .addCase(fetchAllPatients.pending, (state) => {
+        state.loading.patients = true;
+        state.error.patients = '';
       })
-      .addCase(fetchPatients.fulfilled, (state, action) => {
-        state.loading = false;
+      .addCase(fetchAllPatients.fulfilled, (state, action) => {
+        state.loading.patients = false;
         state.patients = action.payload; 
       })
-      .addCase(fetchPatients.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch patients'; 
+      .addCase(fetchAllPatients.rejected, (state, action) => {
+        state.loading.patients = false;
+        state.error.patients= action.error.message || 'Failed to fetch patients'; 
+      })
+      .addCase(fetchCurrentPatient.pending, (state) => {
+        state.loading.currentPatient = true;
+        state.error.currentPatient = '';
+      })
+      .addCase(fetchCurrentPatient.fulfilled, (state, action) => {
+        state.loading.currentPatient = false;
+        state.currentPatient = action.payload; 
+      })
+      .addCase(fetchCurrentPatient.rejected, (state, action) => {
+        state.loading.currentPatient = false;
+        state.error.currentPatient = action.error.message || 'Failed to fetch patients'; 
       });
   },
 });

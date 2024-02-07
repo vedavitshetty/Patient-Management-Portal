@@ -1,0 +1,1 @@
+from .patients_serializer import PatientListSerializer, PatientDetailSerializer
