@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAppThunkDispatch, useAppSelector } from '../redux/store';
 import { fetchAllPatients } from '../redux/patientsSlice';
-import { formatDateOfBirth } from '../utils/textHelpers';
+import { formatDateOfBirth, getUTCDate } from '../utils/textHelpers';
 
 const DashboardPage: React.FC = () => {
   const dispatch = useAppThunkDispatch();
@@ -30,9 +30,9 @@ const DashboardPage: React.FC = () => {
 
   const filteredPatients = patients.filter((patient) => {
     const patientDOB = patient.dateOfBirth ? new Date(patient.dateOfBirth) : null;
-    const startUTC = startDate ? new Date(startDate.toISOString().slice(0, 10)) : null;
-    const endUTC = endDate ? new Date(endDate.toISOString().slice(0, 10)) : null;
-  
+    const startUTC = getUTCDate(startDate);
+    const endUTC = getUTCDate(endDate);
+
     return (
       `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (!startUTC || (patientDOB && patientDOB >= startUTC)) &&
