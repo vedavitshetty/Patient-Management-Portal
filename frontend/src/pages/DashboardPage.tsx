@@ -52,7 +52,7 @@ const DashboardPage: React.FC = () => {
                 {patient.firstName}
               </td>
               <td className="border px-4 py-2">{patient.lastName}</td>
-              <td className="border px-4 py-2">{formatDateOfBirth(patient.dateOfBirth)}</td>
+              <td className="border px-4 py-2">{patient.dateOfBirth ? formatDateOfBirth(patient.dateOfBirth) : 'Not Provided'}</td>
               <td className="border px-4 py-2">{patient.status}</td>
             </tr>
           ))}

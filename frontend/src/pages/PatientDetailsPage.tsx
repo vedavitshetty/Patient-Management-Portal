@@ -30,23 +30,27 @@ export const PatientDetailsPage: React.FC = () => {
                 <p>First Name: {patient.firstName}</p>
                 <p>Middle Name: {patient.middleName}</p>
                 <p>Last Name: {patient.lastName}</p>
-                <p>Date of Birth: {formatDateOfBirth(patient.dateOfBirth)}</p>
+                <p>Date of Birth: {patient.dateOfBirth ? formatDateOfBirth(patient.dateOfBirth) : 'Not Provided'}</p>
                 <p>Status: {patient.status}</p>
             </div>
 
             <div className="mb-4">
                 <h3 className="text-2xl font-semibold mb-2">Addresses</h3>
-                <ul>
-                    {patient.addresses?.map((address, index) => (
-                        <li key={index}>
-                            <p>Address Line 1: {address.addressLine1}</p>
-                            <p>Address Line 2: {address.addressLine2}</p>
-                            <p>City: {address.city}</p>
-                            <p>State: {address.state}</p>
-                            <p>Zip Code: {address.zipCode}</p>
-                        </li>
-                    ))}
-                </ul>
+                {patient?.addresses.length > 0 ? (
+                    <ul>
+                        {patient.addresses.map((address, index) => (
+                            <li key={index}>
+                                <p>Address Line 1: {address.addressLine1}</p>
+                                <p>Address Line 2: {address.addressLine2}</p>
+                                <p>City: {address.city}</p>
+                                <p>State: {address.state}</p>
+                                <p>Zip Code: {address.zipCode}</p>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>None Provided</p>
+                )}
             </div>
             {patient.customData && patient.customData.length > 0 && (
                 <div className="mb-4">
