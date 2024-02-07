@@ -26,3 +26,5 @@ class Patient(models.Model):
     custom_data = models.ManyToManyField(
         PatientCustomData, related_name="patients", blank=True, null=True
     )
+    primary_city = models.CharField(max_length=50, blank=True, null=True)
+    primary_state = models.CharField(max_length=8, blank=True, null=True)
