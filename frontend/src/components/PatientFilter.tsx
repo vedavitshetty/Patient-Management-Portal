@@ -1,8 +1,6 @@
 import React from 'react';
-import { DatePicker, Input, Select } from 'antd';
+import { DatePicker, Input } from 'antd';
 import moment from 'moment';
-
-const { Option } = Select;
 
 interface PatientFilterProps {
   onSearch: (value: string) => void;
@@ -55,19 +53,6 @@ const PatientFilter: React.FC<PatientFilterProps> = ({
           onChange={onEndDateChange}
           className="px-4 py-2 border rounded mr-4"
         />
-        <label htmlFor="statusFilter" className="block mr-2">Status:</label>
-        <Select
-          id="statusFilter"
-          value={statusFilter}
-          onChange={onStatusFilterChange}
-          className="px-4 py-2 border rounded min-w-40"
-        >
-          <Option value="">ALL</Option>
-          <Option value="INQUIRY">INQUIRY</Option>
-          <Option value="ONBOARDING">ONBOARDING</Option>
-          <Option value="ACTIVE">ACTIVE</Option>
-          <Option value="CHURNED">CHURNED</Option>
-        </Select>
       </div>
     </div>
   );
