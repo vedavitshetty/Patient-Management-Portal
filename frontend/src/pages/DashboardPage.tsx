@@ -13,6 +13,7 @@ const DashboardPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>('');
 
   const patients = useAppSelector((state) => state.patients.patients);
 
@@ -28,6 +29,10 @@ const DashboardPage: React.FC = () => {
     setEndDate(date);
   };
 
+  const handleStatusFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusFilter(e.target.value);
+  };
+
   const filteredPatients = patients.filter((patient) => {
     const patientDOB = patient.dateOfBirth ? new Date(patient.dateOfBirth) : null;
     const startUTC = getUTCDate(startDate);
@@ -36,10 +41,10 @@ const DashboardPage: React.FC = () => {
     return (
       `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (!startUTC || (patientDOB && patientDOB >= startUTC)) &&
-      (!endUTC || (patientDOB && patientDOB <= endUTC))
+      (!endUTC || (patientDOB && patientDOB <= endUTC)) &&
+      (!statusFilter || patient.status.toLowerCase() === statusFilter.toLowerCase())
     );
   });
-  
 
   useEffect(() => {
     memoizedDispatch(fetchAllPatients());
@@ -70,8 +75,19 @@ const DashboardPage: React.FC = () => {
           onChange={handleEndDateChange}
           dateFormat="MM/dd/yyyy"
           placeholderText="End Date"
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border rounded mr-4"
         />
+        <select
+          value={statusFilter}
+          onChange={handleStatusFilterChange}
+          className="px-4 py-2 border rounded"
+        >
+          <option value="">All</option>
+          <option value="INQUIRY">INQUIRY</option>
+          <option value="ONBOARDING">ONBOARDING</option>
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="CHURNED">CHURNED</option>
+        </select>
       </div>
       <table className="min-w-full table-auto">
         <thead>
