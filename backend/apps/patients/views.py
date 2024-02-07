@@ -10,5 +10,6 @@ class PatientCRUD(generics.RetrieveUpdateDestroyAPIView):
 
 
 class PatientList(generics.ListCreateAPIView):
-    queryset = Patient.objects.all()
+    # Get queryset sorted by first name
+    queryset = Patient.objects.all().order_by('first_name')
     serializer_class = PatientListSerializer
