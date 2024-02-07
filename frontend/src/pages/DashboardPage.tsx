@@ -30,7 +30,7 @@ const DashboardPage: React.FC = () => {
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Search patients"
+          placeholder="Search patients by first name or last name"
           value={searchTerm}
           onChange={handleSearch}
           className="px-4 py-2 border rounded w-full"
@@ -39,7 +39,6 @@ const DashboardPage: React.FC = () => {
       <table className="min-w-full table-auto">
         <thead>
           <tr>
-            <th className="px-4 py-2">ID</th>
             <th className="px-4 py-2">First Name</th>
             <th className="px-4 py-2">Last Name</th>
             <th className="px-4 py-2">Date of Birth</th>
@@ -49,7 +48,6 @@ const DashboardPage: React.FC = () => {
         <tbody>
           {filteredPatients.map((patient) => (
             <tr key={patient.id} onClick={()=> window.open(`/patient/${patient.id}`, '_blank')} className="cursor-pointer">
-              <td className="border px-4 py-2">{patient.id}</td>
               <td className="border px-4 py-2">
                 {patient.firstName}
               </td>
