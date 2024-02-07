@@ -54,7 +54,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-3xl font-semibold mb-4">Dashboard</h2>
+      <h2 className="text-3xl font-semibold mb-4">Patient Dashboard</h2>
       <div className="mb-4">
         <label htmlFor="searchInput" className="block mb-2">Search patients by name:</label>
         <Input
@@ -65,26 +65,32 @@ const DashboardPage: React.FC = () => {
         />
       </div>
       <div className="mb-4 flex">
+        <label htmlFor="startDate" className="block mr-2">Start Date:</label>
         <DatePicker
-          placeholder="Start Date"
+          id="startDate"
+          placeholder="MM/DD/YYYY"
           format="MM/DD/YYYY"
           value={startDate ? moment(startDate) : null}
           onChange={handleStartDateChange}
           className="px-4 py-2 border rounded mr-4"
         />
+        <label htmlFor="endDate" className="block mr-2">End Date:</label>
         <DatePicker
-          placeholder="End Date"
+          id="endDate"
+          placeholder="MM/DD/YYYY"
           format="MM/DD/YYYY"
           value={endDate ? moment(endDate) : null}
           onChange={handleEndDateChange}
           className="px-4 py-2 border rounded mr-4"
         />
+        <label htmlFor="statusFilter" className="block mr-2">Status:</label>
         <Select
+          id="statusFilter"
           value={statusFilter}
           onChange={handleStatusFilterChange}
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border rounded min-w-40"
         >
-          <Option value="">All</Option>
+          <Option value="">ALL</Option>
           <Option value="INQUIRY">INQUIRY</Option>
           <Option value="ONBOARDING">ONBOARDING</Option>
           <Option value="ACTIVE">ACTIVE</Option>
