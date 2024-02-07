@@ -16,11 +16,13 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(blank=True, null=True)
     status = models.CharField(
         max_length=50, choices=PatientStatus.choices, default=PatientStatus.INQUIRY
     )
-    addresses = models.ManyToManyField(PatientAddress, related_name="patients")
+    addresses = models.ManyToManyField(
+        PatientAddress, related_name="patients", blank=True, null=True
+    )
     custom_data = models.ManyToManyField(
         PatientCustomData, related_name="patients", blank=True, null=True
     )
