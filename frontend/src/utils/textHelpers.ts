@@ -43,7 +43,7 @@ export const formatDateOfBirth = (dateString: string) => {
   return `${formattedMonth} ${formattedDay}, ${formattedYear}`;
 };
 
-export const getUTCDate = (date: Date | null) => {
+export const getUTCDate = (date: moment.Moment | null) => {
   return date ? new Date(date.toISOString().slice(0, 10)) : null;
 };
 

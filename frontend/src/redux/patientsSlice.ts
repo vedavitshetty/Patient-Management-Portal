@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import customAxios from '../utils/axios';
 import { snakeKeysToCamel } from '../utils/textHelpers';
+import { Patient } from '../common/types';
 
 type PatientState = {
   patients: Patient[];
@@ -15,20 +16,6 @@ type PatientState = {
   };
 }
 
-type PatientAddress = {
-    addressLine1: string;
-    addressLine2?: string;
-    city: string;
-    state: string;
-    zipCode: string;
-}
-
-type PatientCustomData = {
-    fieldName: string;
-    fieldType: string;
-    fieldValue: string;
-}
-
 const initialState: PatientState = {
   patients: [],
   currentPatient: {} as Patient,
@@ -41,17 +28,6 @@ const initialState: PatientState = {
     currentPatient: '',
   
   },
-}
-
-type Patient = {
-  id: number;
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-  dateOfBirth: string;
-  status: string;
-  addresses: PatientAddress[];
-  customData?: PatientCustomData[];
 }
 
 export const fetchAllPatients = createAsyncThunk('patients/fetchPatients', async () => {

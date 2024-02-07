@@ -2,7 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import userReducer from './userSlice'; 
 import patientsReducer from './patientsSlice'; 
-import { ThunkAppDispatch } from '../common/types/state';
+import { ThunkAppDispatch } from '../common/state';
 
 const rootReducer = combineReducers({
     user: userReducer,
