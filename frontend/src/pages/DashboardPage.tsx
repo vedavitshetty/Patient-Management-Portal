@@ -28,11 +28,18 @@ const DashboardPage: React.FC = () => {
     setEndDate(date);
   };
 
-  const filteredPatients = patients.filter((patient) =>
-    `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (!startDate || (patient.dateOfBirth && new Date(patient.dateOfBirth) >= startDate)) &&
-    (!endDate || (patient.dateOfBirth && new Date(patient.dateOfBirth) <= endDate))
-  );
+  const filteredPatients = patients.filter((patient) => {
+    const patientDOB = patient.dateOfBirth ? new Date(patient.dateOfBirth) : null;
+    const startUTC = startDate ? new Date(startDate.toISOString().slice(0, 10)) : null;
+    const endUTC = endDate ? new Date(endDate.toISOString().slice(0, 10)) : null;
+  
+    return (
+      `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (!startUTC || (patientDOB && patientDOB >= startUTC)) &&
+      (!endUTC || (patientDOB && patientDOB <= endUTC))
+    );
+  });
+  
 
   useEffect(() => {
     memoizedDispatch(fetchAllPatients());
