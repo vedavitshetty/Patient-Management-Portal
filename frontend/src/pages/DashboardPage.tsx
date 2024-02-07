@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { DatePicker, Input, Select } from 'antd';
+import moment from 'moment';
 import { useAppThunkDispatch, useAppSelector } from '../redux/store';
 import { fetchAllPatients } from '../redux/patientsSlice';
 import { formatDateOfBirth, getUTCDate } from '../utils/textHelpers';
+
+const { Option } = Select;
 
 const DashboardPage: React.FC = () => {
   const dispatch = useAppThunkDispatch();
@@ -17,20 +19,20 @@ const DashboardPage: React.FC = () => {
 
   const patients = useAppSelector((state) => state.patients.patients);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
   };
 
-  const handleStartDateChange = (date: Date | null) => {
-    setStartDate(date);
+  const handleStartDateChange = (date: moment.Moment | null) => {
+    setStartDate(date?.toDate() || null);
   };
 
-  const handleEndDateChange = (date: Date | null) => {
-    setEndDate(date);
+  const handleEndDateChange = (date: moment.Moment | null) => {
+    setEndDate(date?.toDate() || null);
   };
 
-  const handleStatusFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatusFilter(e.target.value);
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value);
   };
 
   const filteredPatients = patients.filter((patient) => {
@@ -54,40 +56,40 @@ const DashboardPage: React.FC = () => {
     <div className="container mx-auto p-4">
       <h2 className="text-3xl font-semibold mb-4">Dashboard</h2>
       <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search patients by first name or last name"
+        <label htmlFor="searchInput" className="block mb-2">Search patients by name:</label>
+        <Input
+          id="searchInput"
+          placeholder="Please enter first or last name"
           value={searchTerm}
-          onChange={handleSearch}
-          className="px-4 py-2 border rounded w-full"
+          onChange={(e) => handleSearch(e.target.value)}
         />
       </div>
       <div className="mb-4 flex">
         <DatePicker
-          selected={startDate}
+          placeholder="Start Date"
+          format="MM/DD/YYYY"
+          value={startDate ? moment(startDate) : null}
           onChange={handleStartDateChange}
-          dateFormat="MM/dd/yyyy"
-          placeholderText="Start Date"
           className="px-4 py-2 border rounded mr-4"
         />
         <DatePicker
-          selected={endDate}
+          placeholder="End Date"
+          format="MM/DD/YYYY"
+          value={endDate ? moment(endDate) : null}
           onChange={handleEndDateChange}
-          dateFormat="MM/dd/yyyy"
-          placeholderText="End Date"
           className="px-4 py-2 border rounded mr-4"
         />
-        <select
+        <Select
           value={statusFilter}
           onChange={handleStatusFilterChange}
           className="px-4 py-2 border rounded"
         >
-          <option value="">All</option>
-          <option value="INQUIRY">INQUIRY</option>
-          <option value="ONBOARDING">ONBOARDING</option>
-          <option value="ACTIVE">ACTIVE</option>
-          <option value="CHURNED">CHURNED</option>
-        </select>
+          <Option value="">All</Option>
+          <Option value="INQUIRY">INQUIRY</Option>
+          <Option value="ONBOARDING">ONBOARDING</Option>
+          <Option value="ACTIVE">ACTIVE</Option>
+          <Option value="CHURNED">CHURNED</Option>
+        </Select>
       </div>
       <table className="min-w-full table-auto">
         <thead>
