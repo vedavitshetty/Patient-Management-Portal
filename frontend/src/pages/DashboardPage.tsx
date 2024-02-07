@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { useAppThunkDispatch, useAppSelector } from '../redux/store';
 import { fetchAllPatients } from '../redux/patientsSlice';
 import { formatDateOfBirth } from '../utils/textHelpers';
@@ -9,6 +11,8 @@ const DashboardPage: React.FC = () => {
   const memoizedDispatch = useCallback(dispatch, [dispatch]);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const patients = useAppSelector((state) => state.patients.patients);
 
@@ -16,8 +20,18 @@ const DashboardPage: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleStartDateChange = (date: Date | null) => {
+    setStartDate(date);
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    setEndDate(date);
+  };
+
   const filteredPatients = patients.filter((patient) =>
-    `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
+    `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (!startDate || (patient.dateOfBirth && new Date(patient.dateOfBirth) >= startDate)) &&
+    (!endDate || (patient.dateOfBirth && new Date(patient.dateOfBirth) <= endDate))
   );
 
   useEffect(() => {
@@ -36,6 +50,22 @@ const DashboardPage: React.FC = () => {
           className="px-4 py-2 border rounded w-full"
         />
       </div>
+      <div className="mb-4 flex">
+        <DatePicker
+          selected={startDate}
+          onChange={handleStartDateChange}
+          dateFormat="MM/dd/yyyy"
+          placeholderText="Start Date"
+          className="px-4 py-2 border rounded mr-4"
+        />
+        <DatePicker
+          selected={endDate}
+          onChange={handleEndDateChange}
+          dateFormat="MM/dd/yyyy"
+          placeholderText="End Date"
+          className="px-4 py-2 border rounded"
+        />
+      </div>
       <table className="min-w-full table-auto">
         <thead>
           <tr>
@@ -47,7 +77,7 @@ const DashboardPage: React.FC = () => {
         </thead>
         <tbody>
           {filteredPatients.map((patient) => (
-            <tr key={patient.id} onClick={()=> window.open(`/patient/${patient.id}`, '_blank')} className="cursor-pointer">
+            <tr key={patient.id} onClick={() => window.open(`/patient/${patient.id}`, '_blank')} className="cursor-pointer">
               <td className="border px-4 py-2">
                 {patient.firstName}
               </td>
