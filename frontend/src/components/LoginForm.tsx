@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UnauthenticatedFormType } from '../common/constants';
+import { UnauthenticatedFormType } from '../common/types';
 import { loginUser } from '../redux/userSlice';
 import { useAppThunkDispatch } from '../redux/store';
 

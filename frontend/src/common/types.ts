@@ -1,3 +1,5 @@
+export type UnauthenticatedFormType = 'login' | 'createAccount' | 'forgotPassword';
+
 type PatientAddress = {
     addressLine1: string;
     addressLine2?: string;
@@ -19,4 +21,6 @@ export type Patient = {
     status: string;
     addresses: PatientAddress[];
     customData?: PatientCustomData[];
+    primaryCity?: string;
+    primaryState?: string;
   }

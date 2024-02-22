@@ -2,7 +2,7 @@ import { useState } from "react";
 import { LoginForm } from "../components/LoginForm";
 import { ForgotPasswordForm } from "../components/ForgotPasswordForm";
 import { CreateAccountForm } from "../components/CreateAccountForm";
-import { UnauthenticatedFormType } from "../common/constants";
+import { UnauthenticatedFormType } from "../common/types";
 
 const LoginPage: React.FC = () => {
     const [formType, setFormType] = useState<UnauthenticatedFormType>('login');

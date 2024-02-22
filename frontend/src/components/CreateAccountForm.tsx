@@ -1,5 +1,5 @@
 import React from "react";
-import { UnauthenticatedFormType } from "../common/constants";
+import { UnauthenticatedFormType } from "../common/types";
 
 export const CreateAccountForm = ({ setFormType }: { setFormType: (formType: UnauthenticatedFormType) => void }) => {
   return (

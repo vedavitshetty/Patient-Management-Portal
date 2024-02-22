@@ -4,6 +4,8 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import PatientDetailsPage from './pages/PatientDetailsPage';
 import { useAppSelector } from './redux/store';
+import { EditPatientPage } from './pages/EditPatientPage';
+import NewPatientPage from './pages/NewPatientPage';
 
 function PrivateRoute() {
   const isAuthenticated = useAppSelector(state => state.user.user !== null);
@@ -39,6 +41,8 @@ function App() {
           <Route index element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/patient/:id" element={<PatientDetailsPage />} />
+          <Route path="/patient/:id/edit" element={<EditPatientPage />} />
+          <Route path="/patient/new" element={<NewPatientPage />} />
         </Route>
       </Routes>
     </Router>

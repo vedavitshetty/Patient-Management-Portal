@@ -6,22 +6,18 @@ interface PatientFilterProps {
   onSearch: (value: string) => void;
   onStartDateChange: (date: moment.Moment | null) => void;
   onEndDateChange: (date: moment.Moment | null) => void;
-  onStatusFilterChange: (value: string) => void;
   searchTerm: string;
   startDate: moment.Moment | null;
   endDate: moment.Moment | null;
-  statusFilter: string;
 }
 
 const PatientFilter: React.FC<PatientFilterProps> = ({
   onSearch,
   onStartDateChange,
   onEndDateChange,
-  onStatusFilterChange,
   searchTerm,
   startDate,
   endDate,
-  statusFilter,
 }) => {
   return (
     <div>
