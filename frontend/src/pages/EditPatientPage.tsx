@@ -40,6 +40,6 @@ export const EditPatientPage = () => {
   return patient ? (
     <PatientForm initialValues={patient} onSubmit={handleSubmit} />
   ) : (
-    <NotFoundPage isEditPatient={true}/>
+    <NotFoundPage isFetchingPatient={true}/>
   )
 }

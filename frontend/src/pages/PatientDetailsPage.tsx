@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useAppSelector, useAppThunkDispatch } from '../redux/store'
 import { formatDateOfBirth } from '../utils/textHelpers'
 import { fetchCurrentPatient } from '../redux/patientsSlice'
+import { NotFoundPage } from './NotFoundPage'
 
 export const PatientDetailsPage: React.FC = () => {
   const dispatch = useAppThunkDispatch()
@@ -19,7 +20,7 @@ export const PatientDetailsPage: React.FC = () => {
 
   if (!patient.id) {
     // Handle patient not found
-    return <div>Patient not found</div>
+    return <NotFoundPage isFetchingPatient={true}/>
   }
 
   return (
