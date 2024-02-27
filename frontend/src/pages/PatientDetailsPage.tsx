@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useAppSelector, useAppThunkDispatch } from '../redux/store'
 import { formatDateOfBirth } from '../utils/textHelpers'
 import { fetchCurrentPatient } from '../redux/patientsSlice'
@@ -25,7 +25,10 @@ export const PatientDetailsPage: React.FC = () => {
 
   return (
     <div className='container mx-auto p-4'>
-      <h2 className='text-3xl font-semibold mb-4'>Patient Details</h2>
+      <div className='flex items-center gap-10 mb-4'>
+        <h2 className='text-3xl font-semibold'>Patient Details</h2>
+        <Link to={`/patient/${patient.id}/edit`} className='text-blue-500'>Edit</Link>
+      </div>
       <div className='mb-4'>
         <h3 className='text-2xl font-semibold mb-2'>Personal Information</h3>
         <p>First Name: {patient.firstName}</p>
@@ -36,6 +39,8 @@ export const PatientDetailsPage: React.FC = () => {
           {patient.dateOfBirth ? formatDateOfBirth(patient.dateOfBirth) : 'Not Provided'}
         </p>
         <p>Status: {patient.status}</p>
+        <p>Primary City: {patient.primaryCity}</p>
+        <p>Primary State: {patient.primaryState}</p>
       </div>
 
       <div className='mb-4'>
@@ -44,11 +49,14 @@ export const PatientDetailsPage: React.FC = () => {
           <ul>
             {patient.addresses.map((address, index) => (
               <li key={index}>
-                <p>Address Line 1: {address.addressLine1}</p>
-                <p>Address Line 2: {address.addressLine2}</p>
-                <p>City: {address.city}</p>
-                <p>State: {address.state}</p>
-                <p>Zip Code: {address.zipCode}</p>
+                <div className='mb-2'>
+                  <strong>Address {index + 1}:</strong>
+                  <p>Address Line 1: {address.addressLine1}</p>
+                  <p>Address Line 2: {address.addressLine2}</p>
+                  <p>City: {address.city}</p>
+                  <p>State: {address.state}</p>
+                  <p>Zip Code: {address.zipCode}</p>
+                </div>
               </li>
             ))}
           </ul>
