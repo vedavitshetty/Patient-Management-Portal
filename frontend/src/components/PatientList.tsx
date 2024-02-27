@@ -7,6 +7,12 @@ import { US_STATES } from '../common/constants'
 import { useNavigate } from 'react-router-dom'
 import { deletePatient } from '../redux/patientsSlice'
 import { useAppThunkDispatch } from '../redux/store'
+import {
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+  TablePaginationConfig,
+} from 'antd/es/table/interface'
 
 interface PatientListProps {
   patients: Patient[]
@@ -17,22 +23,42 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
   const navigate = useNavigate()
   const dispatch = useAppThunkDispatch()
 
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  })
+
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<Patient> | SorterResult<Patient>[],
+    extra: TableCurrentDataSource<Patient>,
+  ) => {
+    setPagination(prevPagination => ({
+      ...prevPagination,
+      current: pagination.current || 1,
+    }))
+  }
+
   const columns: ColumnType<Patient>[] = [
     {
       title: 'First Name',
       dataIndex: 'firstName',
       key: 'firstName',
+      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
     },
     {
       title: 'Last Name',
       dataIndex: 'lastName',
       key: 'lastName',
+      sorter: (a, b) => a.lastName.localeCompare(b.lastName),
     },
     {
       title: 'Date of Birth',
       dataIndex: 'dateOfBirth',
       key: 'dateOfBirth',
       render: (dateOfBirth: string) => formatDateOfBirth(dateOfBirth),
+      sorter: (a, b) => new Date(a.dateOfBirth).getTime() - new Date(b.dateOfBirth).getTime(),
     },
     {
       title: 'Status',
@@ -65,9 +91,8 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
           />
           <Button
             onClick={() => {
-              // Add onClick event to the Reset button
-              setCityFilter('') // Clear the city filter
-              clearFilters && clearFilters() // Clear the filters
+              setCityFilter('')
+              clearFilters && clearFilters()
             }}
           >
             Reset
@@ -138,7 +163,8 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
       <Table
         dataSource={patients}
         columns={columns}
-        pagination={{ defaultPageSize: 5 }}
+        pagination={pagination}
+        onChange={handleTableChange}
         onRow={onRowClick}
         rowKey='id'
       />
