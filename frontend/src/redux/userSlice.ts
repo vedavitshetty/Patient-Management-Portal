@@ -37,6 +37,7 @@ export const loginUser = createAsyncThunk('user/loginUser', async (loginData: Lo
 
 export const logoutUser = createAsyncThunk('user/logoutUser', async () => {
   await customAxios.post('/accounts/logout/')
+  localStorage.removeItem('token')
 })
 
 const userSlice = createSlice({

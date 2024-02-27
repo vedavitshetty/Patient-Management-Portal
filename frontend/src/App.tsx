@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import { useAppSelector, useAppThunkDispatch } from './redux/store'
 import Header from './components/Header' // Import the Header component
 import { LoginPage } from './pages/LoginPage'
@@ -13,9 +13,15 @@ import { Spin } from 'antd'
 
 function PrivateRoute({ element }: { element: React.ReactNode }) {
   const isAuthenticated = useIsAuthenticated()
-
+  const { pathname } = useLocation();
+  
   if (!isAuthenticated) {
     return <Navigate to='/login' />
+  }
+  
+  // Redirect to dashboard if user is already authenticated and trying to access the login page
+  if (pathname === '/login') {
+    return <Navigate to='/dashboard' />;
   }
 
   return <>{element}</>
@@ -52,7 +58,7 @@ function App() {
     <Router>
       {isAuthenticated && <Header />}
       <Routes>
-        <Route path='/login' element={<LoginPage />} />
+        <Route path='/login' element={<PrivateRoute element={<LoginPage />} />} />
         <Route path='/' element={<Navigate to='/dashboard' />} />
         <Route path='/dashboard' element={<PrivateRoute element={<PatientDashboardPage />} />} />
         <Route path='/patient/:id' element={<PrivateRoute element={<PatientDetailsPage />} />} />
