@@ -67,5 +67,3 @@ export const PatientDetailsPage: React.FC = () => {
         </div>
     );
 };
-
-export default PatientDetailsPage;

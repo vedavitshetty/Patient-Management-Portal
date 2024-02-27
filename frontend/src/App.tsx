@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from 'react-router-dom';
-import LoginPage from './pages/LoginPage'; 
-import DashboardPage from './pages/DashboardPage';
-import PatientDetailsPage from './pages/PatientDetailsPage';
 import { useAppSelector } from './redux/store';
+import { LoginPage } from './pages/LoginPage';
+import { DashboardPage } from './pages/DashboardPage';
+import { PatientDetailsPage } from './pages/PatientDetailsPage';
 import { EditPatientPage } from './pages/EditPatientPage';
-import NewPatientPage from './pages/NewPatientPage';
+import { NewPatientPage } from './pages/NewPatientPage';
+
 
 function PrivateRoute() {
   const isAuthenticated = useAppSelector(state => state.user.user !== null);

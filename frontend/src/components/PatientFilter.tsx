@@ -11,7 +11,7 @@ interface PatientFilterProps {
   endDate: moment.Moment | null;
 }
 
-const PatientFilter: React.FC<PatientFilterProps> = ({
+export const PatientFilter: React.FC<PatientFilterProps> = ({
   onSearch,
   onStartDateChange,
   onEndDateChange,
@@ -53,5 +53,3 @@ const PatientFilter: React.FC<PatientFilterProps> = ({
     </div>
   );
 };
-
-export default PatientFilter;

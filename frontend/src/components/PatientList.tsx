@@ -12,7 +12,7 @@ interface PatientListProps {
   patients: Patient[];
 }
 
-const PatientList: React.FC<PatientListProps> = ({ patients }) => {
+export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
   const [cityFilter, setCityFilter] = useState<string>('');
   const navigate = useNavigate();
   const dispatch = useAppThunkDispatch();
@@ -122,5 +122,3 @@ const PatientList: React.FC<PatientListProps> = ({ patients }) => {
     </div>
   );
 };
-
-export default PatientList;

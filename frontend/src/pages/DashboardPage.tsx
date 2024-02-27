@@ -2,12 +2,14 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useAppThunkDispatch, useAppSelector } from '../redux/store';
 import { fetchAllPatients } from '../redux/patientsSlice';
 import { getUTCDate } from '../utils/textHelpers';
-import PatientFilter from '../components/PatientFilter';
-import PatientList from '../components/PatientList';
 import moment from 'moment';
+import { PatientFilter } from '../components/PatientFilter';
+import { PatientList } from '../components/PatientList';
+import { useNavigate } from 'react-router-dom';
 
-const DashboardPage: React.FC = () => {
+export const DashboardPage: React.FC = () => {
   const dispatch = useAppThunkDispatch();
+  const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState<moment.Moment | null>(null);
@@ -27,7 +29,7 @@ const DashboardPage: React.FC = () => {
     setEndDate(date || null);
   };
 
-  const filteredPatients = useMemo(() => patients.filter((patient) => {
+  const filteredPatients = useMemo(() => patients?.filter((patient) => {
     const patientDOB = patient.dateOfBirth ? new Date(patient.dateOfBirth) : null;
     const startUTC = getUTCDate(startDate);
     const endUTC = getUTCDate(endDate);
@@ -47,6 +49,12 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-3xl font-semibold mb-4">Patient Dashboard</h2>
+      <button 
+        className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => navigate('/patient/new')}
+      >
+        Create Patient
+      </button>
       <PatientFilter
         onSearch={handleSearch}
         onStartDateChange={handleStartDateChange}
@@ -59,5 +67,3 @@ const DashboardPage: React.FC = () => {
     </div>
   );
 };
-
-export default DashboardPage;

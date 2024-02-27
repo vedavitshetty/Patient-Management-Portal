@@ -91,5 +91,3 @@ export const LoginForm = ({ setFormType }: { setFormType: (formType: Unauthentic
     </div>
   );
 };
-
-export default LoginForm;

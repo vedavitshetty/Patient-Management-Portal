@@ -19,6 +19,33 @@ export const snakeKeysToCamel = (data: any): any => {
   return camelData;
 };
 
+export const camelKeysToSnake = (data: any): any => {
+  if (!data || typeof data !== 'object') {
+    return data;
+  }
+
+  if (Array.isArray(data)) {
+    return data.map((item) => camelKeysToSnake(item));
+  }
+
+  const snakeData: any = {};
+
+  for (const key in data) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      const snakeKey = key.replace(/[A-Z0-9]/g, (match, offset) => {
+        if (offset === 0) {
+          return match.toLowerCase();
+        } else {
+          return `_${match.toLowerCase()}`;
+        }
+      });
+      snakeData[snakeKey] = camelKeysToSnake(data[key]);
+    }
+  }
+
+  return snakeData;
+}; 
+
 export const formatDateOfBirth = (dateString: string) => {
   if (!dateString){
     return 'Not provided';

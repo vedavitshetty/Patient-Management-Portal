@@ -1,71 +1,31 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { fetchCurrentPatient, updatePatient } from '../redux/patientsSlice';
+import { Patient } from '../common/types';
 import { useAppSelector, useAppThunkDispatch } from '../redux/store';
-import { formatDateOfBirth } from '../utils/textHelpers';
-import { fetchCurrentPatient } from '../redux/patientsSlice';
+import { PatientForm } from '../components/PatientForm';
 
-export const EditPatientPage: React.FC = () => {
-    const dispatch = useAppThunkDispatch();
-    const memoizedDispatch = useCallback(dispatch, [dispatch]);
+export const EditPatientPage = () => {
+const { id } = useParams();
+const dispatch = useAppThunkDispatch();
+const patient = useAppSelector((state) => state.patients.currentPatient);
 
-    const { id } = useParams<{ id?: string }>(); // Add a question mark to make id optional
-    const patient = useAppSelector((state) => state.patients.currentPatient);
-
-    useEffect(() => {
-        if (id) {
-            memoizedDispatch(fetchCurrentPatient(Number(id)));
-        }
-    }, [id, memoizedDispatch]);
-
-    if (!patient.id) {
-        // Handle patient not found
-        return <div>Patient not found</div>;
+useEffect(() => {
+    if (id) {
+        dispatch(fetchCurrentPatient(Number(id)));
     }
+}, [dispatch, id]);
 
-    return (
-        <div className="container mx-auto p-4">
-            <h2 className="text-3xl font-semibold mb-4">Patient Details</h2>
-            <div className="mb-4">
-                <h3 className="text-2xl font-semibold mb-2">Personal Information</h3>
-                <p>First Name: {patient.firstName}</p>
-                <p>Middle Name: {patient.middleName}</p>
-                <p>Last Name: {patient.lastName}</p>
-                <p>Date of Birth: {patient.dateOfBirth ? formatDateOfBirth(patient.dateOfBirth) : 'Not Provided'}</p>
-                <p>Status: {patient.status}</p>
-            </div>
-
-            <div className="mb-4">
-                <h3 className="text-2xl font-semibold mb-2">Addresses</h3>
-                {patient?.addresses.length > 0 ? (
-                    <ul>
-                        {patient.addresses.map((address, index) => (
-                            <li key={index}>
-                                <p>Address Line 1: {address.addressLine1}</p>
-                                <p>Address Line 2: {address.addressLine2}</p>
-                                <p>City: {address.city}</p>
-                                <p>State: {address.state}</p>
-                                <p>Zip Code: {address.zipCode}</p>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>None Provided</p>
-                )}
-            </div>
-            {patient.customData && patient.customData.length > 0 && (
-                <div className="mb-4">
-                    <h3 className="text-2xl font-semibold mb-2">Custom Data</h3>
-                    <ul>
-                        {patient.customData.map((customField, index) => (
-                            <li key={index}>
-                                <p>{customField.fieldName}: {customField.fieldValue}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-        </div>
-    );
+const handleSubmit = (patientData: Patient) => {
+    dispatch(updatePatient({...patientData, id: Number(id)}));
 };
 
-export default EditPatientPage;
+  return (
+    <div>
+      <h1>Edit Patient</h1>
+      <PatientForm initialValues={patient} onSubmit={handleSubmit} />
+    </div>
+  );
+};
+
+

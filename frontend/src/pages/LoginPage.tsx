@@ -4,7 +4,7 @@ import { ForgotPasswordForm } from "../components/ForgotPasswordForm";
 import { CreateAccountForm } from "../components/CreateAccountForm";
 import { UnauthenticatedFormType } from "../common/types";
 
-const LoginPage: React.FC = () => {
+export const LoginPage: React.FC = () => {
     const [formType, setFormType] = useState<UnauthenticatedFormType>('login');
   
     return (
@@ -17,5 +17,3 @@ const LoginPage: React.FC = () => {
       </div>
     );
   };
-  
-  export default LoginPage;
