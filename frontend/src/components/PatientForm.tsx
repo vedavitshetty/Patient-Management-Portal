@@ -43,6 +43,9 @@ export const PatientForm: React.FC<PatientFormProps> = ({
         {initialValues?.id === 0 ? 'Create Patient' : 'Edit Patient'}
       </div>
       {/* Personal Information */}
+      <Form.Item name='id' hidden>
+        <Input />
+      </Form.Item>
       <Form.Item label='First Name' name='firstName'>
         <Input />
       </Form.Item>
@@ -61,6 +64,18 @@ export const PatientForm: React.FC<PatientFormProps> = ({
           <Option value='ONBOARDING'>Onboarding</Option>
           <Option value='ACTIVE'>Active</Option>
           <Option value='CHURNED'>Churned</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item label='Primary City' name='primaryCity'>
+        <Input />
+      </Form.Item>
+      <Form.Item label='Primary State' name='primaryState'>
+        <Select showSearch>
+          {US_STATES.map(state => (
+            <Option key={state} value={state}>
+              {state}
+            </Option>
+          ))}
         </Select>
       </Form.Item>
 
