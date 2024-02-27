@@ -4,7 +4,6 @@ import { formatDateOfBirth } from '../utils/textHelpers'
 import { Patient } from '../common/types'
 import { ColumnType } from 'antd/es/table'
 import { US_STATES } from '../common/constants'
-import { useNavigate } from 'react-router-dom'
 import { deletePatient } from '../redux/patientsSlice'
 import { useAppThunkDispatch } from '../redux/store'
 import {
@@ -21,7 +20,6 @@ interface PatientListProps {
 
 export const PatientList: React.FC<PatientListProps> = ({ patients, showChurned }) => {
   const [cityFilter, setCityFilter] = useState<string>('')
-  const navigate = useNavigate()
   const dispatch = useAppThunkDispatch()
 
   const [pagination, setPagination] = useState({
@@ -139,7 +137,7 @@ export const PatientList: React.FC<PatientListProps> = ({ patients, showChurned 
             type='link'
             onClick={e => {
               e.stopPropagation()
-              navigate(`/patient/${record.id}/edit/`)
+              window.open(`/patient/${record.id}/edit`, '_blank')
             }}
           >
             Edit
@@ -167,7 +165,7 @@ export const PatientList: React.FC<PatientListProps> = ({ patients, showChurned 
   const onRowClick = (record: Patient) => {
     return {
       onClick: () => {
-        navigate(`/patient/${record.id}`)
+        window.open(`/patient/${record.id}`, '_blank');
       },
       className: 'cursor-pointer',
     }
