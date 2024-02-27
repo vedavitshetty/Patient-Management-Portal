@@ -21,10 +21,7 @@ const handleSubmit = (patientData: Patient) => {
 };
 
   return (
-    <div>
-      <h1>Edit Patient</h1>
-      <PatientForm initialValues={patient} onSubmit={handleSubmit} />
-    </div>
+    <PatientForm initialValues={patient} onSubmit={handleSubmit} />
   );
 };
 

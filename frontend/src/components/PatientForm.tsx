@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Form, Input, Button, Select } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Patient } from '../common/types';
+import { US_STATES } from '../common/constants';
 
 interface PatientFormProps {
     initialValues?: Patient;
     onSubmit: (data: Patient) => void;
 }
 
-export const PatientForm = ({ initialValues = {
+const { Option } = Select;
+
+export const PatientForm: React.FC<PatientFormProps> = ({ initialValues = {
     id: 0,
     firstName: '',
     middleName: '', 
@@ -15,105 +20,123 @@ export const PatientForm = ({ initialValues = {
     status: 'INQUIRY',
     addresses: [],
     customData: [],
-}, onSubmit }: PatientFormProps) => {
-    const [patientData, setPatientData] = useState<Patient>(initialValues);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setPatientData({ ...patientData, [name]: value });
-    };
-
-    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setPatientData({ ...patientData, [name]: value });
-    };
-
-    const handleAddressChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-        const updatedAddresses = patientData.addresses.map((address, addrIndex) => 
-            addrIndex === index ? { ...address, [e.target.name]: e.target.value } : address
-        );
-        setPatientData({ ...patientData, addresses: updatedAddresses });
-    };
-
-    const handleCustomDataChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const updatedCustomData = patientData.customData?.map((customField, fieldIndex) => 
-            fieldIndex === index ? { ...customField, [e.target.name]: e.target.value } : customField
-        );
-        setPatientData({ ...patientData, customData: updatedCustomData ?? [] });
-    };
-
-    const addAddress = () => {
-        setPatientData({
-            ...patientData,
-            addresses: [...patientData.addresses, { addressLine1: '', addressLine2: '', city: '', state: '', zipCode: '' }]
-        });
-    };
-
-    const removeAddress = (index: number) => {
-        const updatedAddresses = patientData.addresses.filter((_, addrIndex) => addrIndex !== index);
-        setPatientData({ ...patientData, addresses: updatedAddresses });
-    };
-
-    const addCustomData = () => {
-        setPatientData({
-            ...patientData,
-            customData: [...(patientData.customData || []), { fieldName: '', fieldType: 'TEXT', fieldValue: '' }]
-        });
-    };
-
-    const removeCustomData = (index: number) => {
-        const updatedCustomData = patientData.customData?.filter((_, fieldIndex) => fieldIndex !== index) || [];
-        setPatientData({ ...patientData, customData: updatedCustomData });
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSubmit(patientData);
+}, onSubmit }) => {
+    const onFinish = (values: Patient) => {
+        onSubmit(values);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-        {/* Personal Information */}
-        <input type="text" name="firstName" value={patientData.firstName} onChange={handleInputChange} placeholder="First Name" />
-        <input type="text" name="middleName" value={patientData.middleName} onChange={handleInputChange} placeholder="Middle Name" />
-        <input type="text" name="lastName" value={patientData.lastName} onChange={handleInputChange} placeholder="Last Name" />
-        <input type="date" name="dateOfBirth" value={patientData.dateOfBirth} onChange={handleInputChange} />
-        <select name="status" value={patientData.status} onChange={handleSelectChange}>
-            <option value="INQUIRY">Inquiry</option>
-            <option value="ONBOARDING">Onboarding</option>
-            <option value="ACTIVE">Active</option>
-            <option value="CHURNED">Churned</option>
-        </select>
+        <Form
+            name="patientForm"
+            initialValues={initialValues}
+            onFinish={onFinish}
+            autoComplete="off"
+            className='border p-4 rounded-md bg-gray-100 w-96 mx-auto'
+        >
+            <div className='text-center text-black pb-4'>{initialValues?.id === 0 ? 'Create Patient' : 'Edit Patient'}</div>
+            {/* Personal Information */}
+            <Form.Item label="First Name" name="firstName">
+                <Input />
+            </Form.Item>
+            <Form.Item label="Middle Name" name="middleName">
+                <Input />
+            </Form.Item>
+            <Form.Item label="Last Name" name="lastName">
+                <Input />
+            </Form.Item>
+            <Form.Item label="Date of Birth" name="dateOfBirth">
+                <Input type="date" />
+            </Form.Item>
+            <Form.Item label="Status" name="status">
+                <Select>
+                    <Option value="INQUIRY">Inquiry</Option>
+                    <Option value="ONBOARDING">Onboarding</Option>
+                    <Option value="ACTIVE">Active</Option>
+                    <Option value="CHURNED">Churned</Option>
+                </Select>
+            </Form.Item>
 
-        {/* Dynamic Addresses */}
-        {patientData.addresses?.map((address, index) => (
-            <div key={index} className="address-fields">
-                <input type="text" name="addressLine1" value={address.addressLine1} onChange={(e) => handleAddressChange(index, e)} placeholder="Address Line 1" />
-                <input type="text" name="addressLine2" value={address.addressLine2} onChange={(e) => handleAddressChange(index, e)} placeholder="Address Line 2" />
-                <input type="text" name="city" value={address.city} onChange={(e) => handleAddressChange(index, e)} placeholder="City" />
-                <input type="text" name="state" value={address.state} onChange={(e) => handleAddressChange(index, e)} placeholder="State" />
-                <input type="text" name="zipCode" value={address.zipCode} onChange={(e) => handleAddressChange(index, e)} placeholder="Zip Code" />
-                <button type="button" onClick={() => removeAddress(index)}>Remove</button>
-            </div>
-        ))}
-        <button type="button" onClick={addAddress}>Add Address</button>
+            {/* Dynamic Addresses */}
+            <Form.List name="addresses">
+                {(fields, { add, remove }) => (
+                    <>
+                        {fields.map(({ key, name, fieldKey, ...restField }) => (
+                            <Form.Item key={key} {...restField}>
+                                <Input.Group compact>
+                                    <Form.Item name={[name, 'addressLine1']} noStyle>
+                                        <Input placeholder="Address Line 1" />
+                                    </Form.Item>
+                                    <Form.Item name={[name, 'addressLine2']} noStyle>
+                                        <Input placeholder="Address Line 2" />
+                                    </Form.Item>
+                                    <Form.Item name={[name, 'city']} noStyle>
+                                        <Input placeholder="City" />
+                                    </Form.Item>
+                                    <Form.Item name={[name, 'state']} noStyle>
+                                        <Select
+                                            showSearch
+                                            optionFilterProp="children"
+                                            placeholder="State"
+                                        >
+                                            {US_STATES.map(state => (
+                                                <Option key={state} value={state}>{state}</Option>
+                                            ))}
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name={[name, 'zipCode']} noStyle>
+                                        <Input placeholder="Zip Code" />
+                                    </Form.Item>
+                                    <MinusCircleOutlined onClick={() => remove(name)} />
+                                </Input.Group>
+                            </Form.Item>
+                        ))}
+                        <Form.Item>
+                            <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
+                                Add Address
+                            </Button>
+                        </Form.Item>
+                    </>
+                )}
+            </Form.List>
 
-        {/* Dynamic Custom Data */}
-        {patientData.customData?.map((customField, index) => (
-            <div key={index} className="custom-data-fields">
-                <input type="text" name="fieldName" value={customField.fieldName} onChange={(e) => handleCustomDataChange(index, e)} placeholder="Field Name" />
-                <select name="fieldType" value={customField.fieldType} onChange={(e) => handleCustomDataChange(index, e)}>
-                    <option value="TEXT">Text</option>
-                    <option value="NUMBER">Number</option>
-                    <option value="DATE">Date</option>
-                </select>
-                <input type="text" name="fieldValue" value={customField.fieldValue} onChange={(e) => handleCustomDataChange(index, e)} placeholder="Field Value" />
-                <button type="button" onClick={() => removeCustomData(index)}>Remove</button>
-            </div>
-        ))}
-        <button type="button" onClick={addCustomData}>Add Custom Data</button>
+            {/* Dynamic Custom Data */}
+            <Form.List name="customData">
+                {(fields, { add, remove }) => (
+                    <>
+                        {fields.map(({ key, name, fieldKey, ...restField }) => (
+                            <Form.Item key={key} {...restField}>
+                                <Input.Group compact>
+                                    <Form.Item name={[name, 'fieldName']} noStyle>
+                                        <Input placeholder="Field Name" />
+                                    </Form.Item>
+                                    <Form.Item name={[name, 'fieldType']} noStyle>
+                                        <Select placeholder="Field Type">
+                                            <Option value="TEXT">Text</Option>
+                                            <Option value="NUMBER">Number</Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item name={[name, 'fieldValue']} noStyle>
+                                        <Input placeholder="Field Value" />
+                                    </Form.Item>
+                                    <MinusCircleOutlined onClick={() => remove(name)} />
+                                </Input.Group>
+                            </Form.Item>
+                        ))}
+                        <Form.Item>
+                            <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
+                                Add Custom Data
+                            </Button>
+                        </Form.Item>
+                    </>
+                )}
+            </Form.List>
 
-        <button type="submit" className="save-patient-btn">Save Patient</button>
-        </form>
+            {/* Submit Button */}
+            <Form.Item>
+                <Button type="primary" htmlType="submit">
+                    Save Patient
+                </Button>
+            </Form.Item>
+        </Form>
     );
 };
