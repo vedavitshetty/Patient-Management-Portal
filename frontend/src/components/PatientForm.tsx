@@ -5,6 +5,7 @@ import { Patient } from '../common/types'
 import { US_STATES } from '../common/constants'
 import { SaveButton } from './SaveButton'
 import { CancelButton } from './CancelButton'
+import { useAppSelector } from '../redux/store'
 
 interface PatientFormProps {
   initialValues?: Patient
@@ -26,6 +27,9 @@ export const PatientForm: React.FC<PatientFormProps> = ({
   },
   onSubmit,
 }) => {
+  const createLoading = useAppSelector(state => state.patients.loading.createPatient)
+  const updateLoading = useAppSelector(state => state.patients.loading.updatePatient)
+
   const onFinish = (values: Patient) => {
     onSubmit(values)
   }
@@ -208,7 +212,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
       <Form.Item>
         <div className='flex justify-between'>
           <CancelButton displayText='Cancel' />
-          <SaveButton displayText='Save Patient' />
+          <SaveButton displayText='Save Patient' loading={createLoading || updateLoading} />
         </div>
       </Form.Item>
     </Form>
