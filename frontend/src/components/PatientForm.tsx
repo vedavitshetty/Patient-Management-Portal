@@ -3,6 +3,7 @@ import { Form, Input, Button, Select } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { Patient } from '../common/types'
 import { US_STATES } from '../common/constants'
+import { SaveButton } from './SaveButton'
 
 interface PatientFormProps {
   initialValues?: Patient
@@ -136,9 +137,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
       {/* Submit Button */}
       <Form.Item>
-        <Button type='primary' htmlType='submit'>
-          Save Patient
-        </Button>
+        <SaveButton displayText='Save Patient' />
       </Form.Item>
     </Form>
   )
