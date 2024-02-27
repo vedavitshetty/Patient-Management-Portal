@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 import { useAppSelector } from './redux/store'
 import { LoginPage } from './pages/LoginPage'
-import { DashboardPage } from './pages/DashboardPage'
+import { PatientDashboardPage } from './pages/PatientDashboardPage'
 import { PatientDetailsPage } from './pages/PatientDetailsPage'
 import { EditPatientPage } from './pages/EditPatientPage'
 import { NewPatientPage } from './pages/NewPatientPage'
@@ -45,7 +45,7 @@ function App() {
           element={
             <>
               <PrivateRoute />
-              <DashboardPage />
+              <PatientDashboardPage />
             </>
           }
         />

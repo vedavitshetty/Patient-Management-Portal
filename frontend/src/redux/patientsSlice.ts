@@ -5,7 +5,8 @@ import { Patient } from '../common/types'
 import { toast } from 'react-toastify'
 
 type PatientState = {
-  patients: Patient[]
+  nonChurnedPatients: Patient[]
+  churnedPatients: Patient[]
   currentPatient: Patient
   loading: {
     patients: boolean
@@ -24,7 +25,8 @@ type PatientState = {
 }
 
 const initialState: PatientState = {
-  patients: [],
+  nonChurnedPatients: [],
+  churnedPatients: [],
   currentPatient: {} as Patient,
   loading: {
     patients: false,
@@ -44,7 +46,11 @@ const initialState: PatientState = {
 
 export const fetchAllPatients = createAsyncThunk('patients/fetchPatients', async () => {
   const response = await customAxios.get('patients/api/patients/')
-  const data = response.data.map((patient: any) => snakeKeysToCamel(patient))
+  const { churned, non_churned } = response.data
+  const data = {
+    churned: snakeKeysToCamel(churned),
+    nonChurned: snakeKeysToCamel(non_churned),
+  }
   return data
 })
 
@@ -100,7 +106,8 @@ const patientSlice = createSlice({
       })
       .addCase(fetchAllPatients.fulfilled, (state, action) => {
         state.loading.patients = false
-        state.patients = action.payload
+        state.nonChurnedPatients = action.payload.nonChurned
+        state.churnedPatients = action.payload.churned
         toast.success('Patients fetched successfully')
       })
       .addCase(fetchAllPatients.rejected, (state, action) => {
@@ -126,7 +133,7 @@ const patientSlice = createSlice({
       })
       .addCase(deletePatient.fulfilled, (state, action) => {
         state.loading.deletePatient = false
-        state.patients = action.payload
+        state.nonChurnedPatients = action.payload
         toast.success('Patient deleted successfully')
       })
       .addCase(deletePatient.rejected, (state, action) => {

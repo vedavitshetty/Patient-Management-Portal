@@ -7,15 +7,20 @@ import { PatientFilter } from '../components/PatientFilter'
 import { PatientList } from '../components/PatientList'
 import { useNavigate } from 'react-router-dom'
 
-export const DashboardPage: React.FC = () => {
+export const PatientDashboardPage: React.FC = () => {
   const dispatch = useAppThunkDispatch()
   const navigate = useNavigate()
 
   const [searchTerm, setSearchTerm] = useState('')
   const [startDate, setStartDate] = useState<moment.Moment | null>(null)
   const [endDate, setEndDate] = useState<moment.Moment | null>(null)
+  const [showChurned, setShowChurned] = useState(false) // State for toggling between churned and non-churned patients
 
-  const patients = useAppSelector(state => state.patients.patients)
+  const nonChurnedPatients = useAppSelector(state => state.patients.nonChurnedPatients)
+  const churnedPatients = useAppSelector(state => state.patients.churnedPatients)
+  
+  // Select the appropriate list of patients based on the toggle
+  const patients = showChurned ? churnedPatients : nonChurnedPatients;
 
   const handleSearch = (value: string) => {
     setSearchTerm(value)
@@ -59,6 +64,14 @@ export const DashboardPage: React.FC = () => {
         onClick={() => navigate('/patient/new')}
       >
         Create Patient
+      </button>
+      <button
+        className={`${
+          showChurned ? 'bg-green-500 hover:bg-green-700'  : 'bg-red-500 hover:bg-red-700'
+        } text-white font-bold py-2 px-4 rounded ml-2`}
+        onClick={() => setShowChurned(!showChurned)}
+      >
+        {showChurned ? 'Show Non-Churned Patients' : 'Show Churned Patients'}
       </button>
       <PatientFilter
         onSearch={handleSearch}
