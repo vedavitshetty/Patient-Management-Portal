@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Input, Button, Popconfirm } from 'antd'
+import { Table, Input, Button, Popconfirm, Tag } from 'antd'
 import { formatDateOfBirth } from '../utils/textHelpers'
 import { Patient } from '../common/types'
 import { ColumnType } from 'antd/es/table'
@@ -40,6 +40,21 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
     }))
   }
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'INQUIRY':
+        return 'yellow'
+      case 'ONBOARDING':
+        return 'blue'
+      case 'ACTIVE':
+        return 'green'
+      case 'CHURNED':
+        return 'red'
+      default:
+        return ''
+    }
+  }
+
   const columns: ColumnType<Patient>[] = [
     {
       title: 'First Name',
@@ -72,6 +87,7 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
       ],
       onFilter: (value, record) =>
         record.status && value ? record.status.toString().indexOf(value.toString()) === 0 : false,
+      render: (status: string) => <Tag color={getStatusColor(status)}>{status}</Tag>,
     },
     {
       title: 'Primary City',
