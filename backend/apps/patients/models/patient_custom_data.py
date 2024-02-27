@@ -6,6 +6,7 @@ class FieldTypeChoices(models.TextChoices):
     TEXT = "TEXT"
     NUMBER = "NUMBER"
 
+
 class PatientCustomData(models.Model):
     field_name = models.CharField(max_length=100)
     field_type = models.CharField(
@@ -13,10 +14,10 @@ class PatientCustomData(models.Model):
     )
     field_value = models.TextField()
     patient = models.ForeignKey(
-        'Patient',
+        "Patient",
         on_delete=models.CASCADE,  # Keep CASCADE
         related_name="custom_data",
-        default=None
+        default=None,
     )
 
     def clean(self):
