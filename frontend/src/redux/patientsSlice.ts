@@ -75,7 +75,10 @@ export const deletePatient = createAsyncThunk(
 export const updatePatient = createAsyncThunk(
   'patients/updatePatient',
   async (patient: Patient) => {
-    const response = await customAxios.put(`patients/api/patients/${patient.id}/`, camelKeysToSnake(patient))
+    const response = await customAxios.put(
+      `patients/api/patients/${patient.id}/`,
+      camelKeysToSnake(patient),
+    )
     const data = snakeKeysToCamel(response.data)
     return data
   },

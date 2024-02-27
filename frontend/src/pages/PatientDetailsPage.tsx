@@ -25,11 +25,15 @@ export const PatientDetailsPage: React.FC = () => {
 
   return (
     <div className='container mx-auto p-4'>
-      <Link to={`/dashboard`} className='text-blue-500'>Go to Dashboard</Link>
+      <Link to={`/dashboard`} className='text-blue-500'>
+        Go to Dashboard
+      </Link>
       <div className='flex items-center gap-4 my-4'>
         <h2 className='text-3xl font-semibold'>Patient Details</h2>
         <div>
-          <Link to={`/patient/${patient.id}/edit`} className='text-blue-500'>Edit</Link>
+          <Link to={`/patient/${patient.id}/edit`} className='text-blue-500'>
+            Edit
+          </Link>
         </div>
       </div>
       <div className='mb-4'>

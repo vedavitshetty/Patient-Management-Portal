@@ -10,7 +10,7 @@ export const NewPatientPage = () => {
 
   const handleSubmit = async (patientData: Patient) => {
     const resultAction = await dispatch(createPatient(patientData))
-    const newPatientId = resultAction.payload.id
+    const newPatientId = resultAction.payload?.id
     if (createPatient.fulfilled.match(resultAction)) {
       navigate(`/patient/${newPatientId}`)
     }
