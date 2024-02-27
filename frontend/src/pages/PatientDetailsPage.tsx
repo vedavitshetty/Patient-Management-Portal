@@ -20,7 +20,7 @@ export const PatientDetailsPage: React.FC = () => {
 
   if (!patient.id) {
     // Handle patient not found
-    return <NotFoundPage isFetchingPatient={true}/>
+    return <NotFoundPage isFetchingPatient={true} />
   }
 
   return (

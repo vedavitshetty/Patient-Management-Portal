@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export const NotFoundPage = ({isFetchingPatient} : {isFetchingPatient?: boolean}) => {
+export const NotFoundPage = ({ isFetchingPatient }: { isFetchingPatient?: boolean }) => {
   return (
     <div>
       <h1>404 - {isFetchingPatient ? 'Patient' : ''} Not Found</h1>
@@ -9,7 +9,7 @@ export const NotFoundPage = ({isFetchingPatient} : {isFetchingPatient?: boolean}
       <Link className='text-blue-500' to='/dashboard'>
         Go to Dashboard
       </Link>
-      <br/>
+      <br />
       <Link className='text-blue-500' to='/patient/new'>
         Create a new patient
       </Link>

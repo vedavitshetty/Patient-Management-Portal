@@ -75,7 +75,7 @@ export const PatientDashboardPage: React.FC = () => {
         endDate={endDate}
       />
       <Switch
-        style={{ backgroundColor: showChurned ? 'red' : 'green', marginBottom: '1rem'}}
+        style={{ backgroundColor: showChurned ? 'red' : 'green', marginBottom: '1rem' }}
         checked={showChurned}
         checkedChildren={'Show Churned Patients'}
         unCheckedChildren={'Show Non-Churned Patients'}

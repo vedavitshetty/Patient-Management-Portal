@@ -16,12 +16,11 @@ export const EditPatientPage = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchCurrentPatient(Number(id)))
-        .then((resultAction: any) => {
-          const fetchedPatient = resultAction.payload
-          setPatient(fetchedPatient)
-          setLoading(false)
-        })
+      dispatch(fetchCurrentPatient(Number(id))).then((resultAction: any) => {
+        const fetchedPatient = resultAction.payload
+        setPatient(fetchedPatient)
+        setLoading(false)
+      })
     }
   }, [dispatch, id])
 
@@ -40,6 +39,6 @@ export const EditPatientPage = () => {
   return patient ? (
     <PatientForm initialValues={patient} onSubmit={handleSubmit} />
   ) : (
-    <NotFoundPage isFetchingPatient={true}/>
+    <NotFoundPage isFetchingPatient={true} />
   )
 }

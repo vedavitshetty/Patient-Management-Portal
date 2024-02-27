@@ -4,6 +4,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { Patient } from '../common/types'
 import { US_STATES } from '../common/constants'
 import { SaveButton } from './SaveButton'
+import { CancelButton } from './CancelButton'
 
 interface PatientFormProps {
   initialValues?: Patient
@@ -25,6 +26,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
   },
   onSubmit,
 }) => {
+
   const onFinish = (values: Patient) => {
     onSubmit(values)
   }
@@ -135,9 +137,11 @@ export const PatientForm: React.FC<PatientFormProps> = ({
         )}
       </Form.List>
 
-      {/* Submit Button */}
       <Form.Item>
-        <SaveButton displayText='Save Patient' />
+        <div className='flex justify-between'>
+          <CancelButton displayText='Cancel' />
+          <SaveButton displayText='Save Patient' />
+        </div>
       </Form.Item>
     </Form>
   )
