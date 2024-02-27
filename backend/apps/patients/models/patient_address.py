@@ -9,3 +9,9 @@ class PatientAddress(models.Model):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=8)
     zip_code = models.CharField(max_length=16)
+    patient = models.ForeignKey(
+        'Patient',
+        on_delete=models.CASCADE,  # Keep CASCADE
+        related_name="addresses",
+        default=None
+    )

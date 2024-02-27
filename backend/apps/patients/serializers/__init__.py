@@ -1,1 +1,1 @@
-from .patients_serializer import PatientListSerializer, PatientDetailSerializer
+from .patients_serializer import PatientListOrCreateSerializer, PatientRUDSerializer

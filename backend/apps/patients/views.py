@@ -1,15 +1,14 @@
-from rest_framework import viewsets, generics
+from rest_framework import generics, status
 from .models import Patient
-from .serializers import PatientListSerializer, PatientDetailSerializer
+from .serializers import PatientListOrCreateSerializer, PatientRUDSerializer
 from rest_framework.response import Response
 
 
-class PatientCRUD(generics.RetrieveUpdateDestroyAPIView):
+class PatientRUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = Patient.objects.all()
-    serializer_class = PatientDetailSerializer
+    serializer_class = PatientRUDSerializer
 
 
-class PatientList(generics.ListCreateAPIView):
-    # Get queryset sorted by first name
-    queryset = Patient.objects.all().order_by('first_name')
-    serializer_class = PatientListSerializer
+class PatientListOrCreate(generics.ListCreateAPIView):
+    queryset = Patient.objects.all().order_by("first_name")
+    serializer_class = PatientListOrCreateSerializer
