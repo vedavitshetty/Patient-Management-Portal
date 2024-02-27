@@ -1,24 +1,45 @@
-import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { fetchCurrentPatient, updatePatient } from '../redux/patientsSlice'
 import { Patient } from '../common/types'
-import { useAppSelector, useAppThunkDispatch } from '../redux/store'
+import { useAppThunkDispatch } from '../redux/store'
 import { PatientForm } from '../components/PatientForm'
+import { NotFoundPage } from './NotFoundPage'
 
 export const EditPatientPage = () => {
   const { id } = useParams()
   const dispatch = useAppThunkDispatch()
-  const patient = useAppSelector(state => state.patients.currentPatient)
+  const navigate = useNavigate()
+
+  const [loading, setLoading] = useState(true)
+  const [patient, setPatient] = useState<Patient | null>(null) // Changed to null
 
   useEffect(() => {
     if (id) {
       dispatch(fetchCurrentPatient(Number(id)))
+        .then((resultAction: any) => {
+          const fetchedPatient = resultAction.payload
+          setPatient(fetchedPatient)
+          setLoading(false)
+        })
     }
   }, [dispatch, id])
 
-  const handleSubmit = (patientData: Patient) => {
-    dispatch(updatePatient({ ...patientData, id: Number(id) }))
+  const handleSubmit = async (patientData: Patient) => {
+    const resultAction = await dispatch(updatePatient(patientData))
+    if (updatePatient.fulfilled.match(resultAction)) {
+      navigate(`/patient/${id}`)
+    }
   }
 
-  return <PatientForm initialValues={patient} onSubmit={handleSubmit} />
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  // Render the PatientForm if patient exists, else display message
+  return patient ? (
+    <PatientForm initialValues={patient} onSubmit={handleSubmit} />
+  ) : (
+    <NotFoundPage isEditPatient={true}/>
+  )
 }

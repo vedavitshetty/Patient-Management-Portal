@@ -16,9 +16,10 @@ import {
 
 interface PatientListProps {
   patients: Patient[]
+  showChurned: boolean
 }
 
-export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
+export const PatientList: React.FC<PatientListProps> = ({ patients, showChurned }) => {
   const [cityFilter, setCityFilter] = useState<string>('')
   const navigate = useNavigate()
   const dispatch = useAppThunkDispatch()
@@ -48,8 +49,6 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
         return 'blue'
       case 'ACTIVE':
         return 'green'
-      case 'CHURNED':
-        return 'red'
       default:
         return ''
     }
@@ -83,7 +82,6 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
         { text: 'INQUIRY', value: 'INQUIRY' },
         { text: 'ONBOARDING', value: 'ONBOARDING' },
         { text: 'ACTIVE', value: 'ACTIVE' },
-        { text: 'CHURNED', value: 'CHURNED' },
       ],
       onFilter: (value, record) =>
         record.status && value ? record.status.toString().indexOf(value.toString()) === 0 : false,
@@ -154,6 +152,7 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
             }}
             onCancel={e => e?.stopPropagation()}
             okText='Yes'
+            okButtonProps={{ className: 'bg-blue-400' }}
             cancelText='No'
           >
             <Button type='link' onClick={e => e.stopPropagation()}>
@@ -178,7 +177,7 @@ export const PatientList: React.FC<PatientListProps> = ({ patients }) => {
     <div className='min-w-full'>
       <Table
         dataSource={patients}
-        columns={columns}
+        columns={showChurned ? columns.filter(col => col.key !== 'status') : columns}
         pagination={pagination}
         onChange={handleTableChange}
         onRow={onRowClick}

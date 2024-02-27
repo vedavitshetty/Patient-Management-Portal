@@ -6,6 +6,7 @@ import moment from 'moment'
 import { PatientFilter } from '../components/PatientFilter'
 import { PatientList } from '../components/PatientList'
 import { useNavigate } from 'react-router-dom'
+import { Switch } from 'antd'
 
 export const PatientDashboardPage: React.FC = () => {
   const dispatch = useAppThunkDispatch()
@@ -18,9 +19,9 @@ export const PatientDashboardPage: React.FC = () => {
 
   const nonChurnedPatients = useAppSelector(state => state.patients.nonChurnedPatients)
   const churnedPatients = useAppSelector(state => state.patients.churnedPatients)
-  
+
   // Select the appropriate list of patients based on the toggle
-  const patients = showChurned ? churnedPatients : nonChurnedPatients;
+  const patients = showChurned ? churnedPatients : nonChurnedPatients
 
   const handleSearch = (value: string) => {
     setSearchTerm(value)
@@ -65,14 +66,6 @@ export const PatientDashboardPage: React.FC = () => {
       >
         Create Patient
       </button>
-      <button
-        className={`${
-          showChurned ? 'bg-green-500 hover:bg-green-700'  : 'bg-red-500 hover:bg-red-700'
-        } text-white font-bold py-2 px-4 rounded ml-2`}
-        onClick={() => setShowChurned(!showChurned)}
-      >
-        {showChurned ? 'Show Non-Churned Patients' : 'Show Churned Patients'}
-      </button>
       <PatientFilter
         onSearch={handleSearch}
         onStartDateChange={handleStartDateChange}
@@ -81,7 +74,14 @@ export const PatientDashboardPage: React.FC = () => {
         startDate={startDate}
         endDate={endDate}
       />
-      <PatientList patients={filteredPatients} />
+      <Switch
+        style={{ backgroundColor: showChurned ? 'red' : 'green', marginBottom: '1rem'}}
+        checked={showChurned}
+        checkedChildren={'Show Churned Patients'}
+        unCheckedChildren={'Show Non-Churned Patients'}
+        onChange={e => setShowChurned(!showChurned)}
+      />
+      <PatientList patients={filteredPatients} showChurned={showChurned} />
     </div>
   )
 }
