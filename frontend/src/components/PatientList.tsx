@@ -165,7 +165,7 @@ export const PatientList: React.FC<PatientListProps> = ({ patients, showChurned 
   const onRowClick = (record: Patient) => {
     return {
       onClick: () => {
-        window.open(`/patient/${record.id}`, '_blank');
+        window.open(`/patient/${record.id}`, '_blank')
       },
       className: 'cursor-pointer',
     }

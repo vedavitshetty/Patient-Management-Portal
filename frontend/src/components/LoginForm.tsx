@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { UnauthenticatedFormType } from '../common/types'
 import { loginUser } from '../redux/userSlice'
 import { useAppThunkDispatch } from '../redux/store'
+import { useNavigate } from 'react-router-dom'
 
 export const LoginForm = ({
   setFormType,
@@ -9,7 +10,9 @@ export const LoginForm = ({
   setFormType: (formType: UnauthenticatedFormType) => void
 }) => {
   const dispatch = useAppThunkDispatch()
+  const navigate = useNavigate()
 
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -25,7 +28,16 @@ export const LoginForm = ({
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    dispatch(loginUser(formData))
+    dispatch(loginUser(formData)).then(response => {
+      // Check if the response indicates successful account creation
+      if (response.meta.requestStatus === 'fulfilled') {
+        // Navigate to the dashboard upon successful account creation
+        navigate('/dashboard')
+      } else {
+        // If authentication failed, display the error message
+        setError('Invalid username or password.');
+      }
+    })
   }
 
   return (
@@ -33,6 +45,7 @@ export const LoginForm = ({
       <div className='max-w-md w-full bg-white p-8 rounded shadow-md'>
         <div className='text-2xl font-extrabold text-gray-900 text-center'>Log In</div>
         <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
+          {error && <div className="text-red-500 text-sm">{error}</div>}
           <div>
             <label htmlFor='username' className='block text-sm font-medium text-gray-700'>
               Username
